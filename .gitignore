@@ -1,0 +1,4 @@
+.vscode/*.json
+client/*.exe
+server/*.exe
+server/*.db
