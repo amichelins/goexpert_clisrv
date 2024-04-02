@@ -5,9 +5,9 @@ import (
 
     "encoding/json"
     // "fmt"
-
     "log"
     "net/http"
+    "os"
     "strings"
     "time"
 )
@@ -61,9 +61,39 @@ func main() {
         return
     }
 
-    log.Println("Cotaçã: " + Resposta.Bid)
-    // Gravamos a cotação no arquivo.
+    err = GravarCotacao(Resposta.Bid)
 
+    if err != nil {
+        log.Println("Erro ao gravar cotação no arquivo: " + err.Error())
+        return
+    }
 }
 
 ///////////////////////////////
+// GravarCotacao Grava a cotação no arquivo cotação, se este não existe ele é criado
+//
+// PARAMETERES
+//
+//     sText string
+//
+// RETURN
+//
+//     error Erro da operação
+func GravarCotacao(sText string) error {
+    var sNome string = "cotacao.txt"
+
+    f, err := os.OpenFile(sNome, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+    if err != nil {
+        return err
+    }
+    defer f.Close()
+
+    _, err = f.WriteString("Dólar: " + sText + "\n")
+
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
